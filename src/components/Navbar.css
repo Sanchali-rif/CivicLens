@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Smooch+Sans:wght@100..900&display=swap');
+.active{
+    color: #0088a9;
+}
+nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 50px;
+    position: sticky;
+    top: 0;
+}
+.CivicLens{
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-decoration: none;
+    color:black;
+    font-family: "Smooch Sans",sans-serif;
+}
+nav ul{
+    display: flex;
+    list-style: none;
+    
+}
+nav li{
+    display: flex;
+    list-style: none;
+    
+}
+nav ul li a{
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+    transition: all 0.3s ease 0s ;
+    color: black;
+    
+}
+nav ul li a:hover{
+    color: #0088a9;
+}
+button{
+    padding: 5px 15px;
+    background-color: rgba(0,136,169,1);
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    font-weight:500;
+    
+    transition: all 0.3s ease 0s ;
+}
+button:hover{
+    background-color: rgba(0,136,169,0.9);
+}
