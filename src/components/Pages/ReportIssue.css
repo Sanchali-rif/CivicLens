@@ -1,0 +1,139 @@
+body{
+    background-color: #f9fafb;
+}
+.report-container {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.report-title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.report-subtitle {
+  text-align: center;
+  color: #6b7280;
+  margin-bottom: 32px;
+}
+
+.report-form {
+  background: #ffffff;
+  padding: 32px;
+  border-radius: 14px;
+  box-shadow: rgba(3, 102, 214, 0.3) 0px 0px 0px 3px;
+}
+
+.form-group {
+  margin-bottom: 28px;
+}
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+
+.upload-box {
+  position: relative;
+  border: 2px dashed #3b82f6;
+  border-radius: 12px;
+  padding: 28px;
+  text-align: center;
+  background: #f8fafc;
+}
+
+.file-input {
+  display: none;
+}
+
+.upload-label {
+  cursor: pointer;
+}
+
+.upload-main-text {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2563eb;
+}
+
+.upload-sub-text {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.description-input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  resize: none;
+  font-size: 0.95rem;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: #374151;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 14px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.submit-btn:hover {
+  background: #1d4ed8;
+}
+.image-preview {
+  margin-top: 16px;
+  width: 100%;
+  max-height: 240px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+}
+.submit-btn:disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
+}
+.map-wrapper {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #d0d7e2;
+  min-height: 300px;
+}
+
+.map-container {
+  width: 100%;
+  height: 100%;
+}
+
+.map-disabled-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: #555;
+  z-index: 10;
+  pointer-events: none;
+}

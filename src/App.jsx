@@ -22,7 +22,7 @@ function App() {
     setUser(currentUser);
     setLoading(false);
 
-    // 👇 ADD THIS HERE
+    
     if (currentUser && location.pathname === "/") {
       window.location.href = "/dashboard";
     }

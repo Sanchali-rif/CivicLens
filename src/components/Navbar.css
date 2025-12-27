@@ -2,14 +2,23 @@
 .active{
     color: #0088a9;
 }
-nav{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 50px;
-    position: sticky;
-    top: 0;
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 10px 50px;
+  background: white;
+  z-index: 1000;
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
+
 .CivicLens{
     font-size: 1.8rem;
     font-weight: bold;
