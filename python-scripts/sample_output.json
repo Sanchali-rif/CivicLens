@@ -1,0 +1,17 @@
+{
+  "status": "ACCEPTED",
+  "issue_type": "Public Safety Hazard",
+  "priority": "HIGH",
+  "confidence": 0.91,
+  "reason": "Life-threatening or critical public safety issue detected",
+  "detected_labels": [
+    "pothole",
+    "waterlogging",
+    "road",
+    "night"
+  ],
+  "ai_metadata": {
+    "model": "Google Vision API",
+    "decision_engine": "CivicLens Unified Logic v1.0"
+  }
+}
