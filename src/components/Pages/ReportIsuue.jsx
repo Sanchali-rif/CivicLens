@@ -1,7 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./ReportIssue.css";
 import { toast } from "react-toastify";
-import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  Marker,
+  useLoadScript,
+  Autocomplete,
+} from "@react-google-maps/api";
 
 const defaultCenter = {
   lat: 22.5726,
@@ -27,6 +32,59 @@ export const ReportIsuue = () => {
   const [locationNotSure, setLocationNotSure] = useState(false);
   const [markerPosition, setMarkerPosition] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [mapCenter, setMapCenter] = useState(defaultCenter);
+  const [address, setAddress] = useState("");
+
+  const autocompleteRef = useRef(null);
+
+  // ✅ Reverse geocode helper
+  const reverseGeocode = (lat, lng) => {
+    if (!window.google) return;
+
+    const geocoder = new window.google.maps.Geocoder();
+    geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+      if (status === "OK" && results[0]) {
+        setAddress(results[0].formatted_address);
+      } else {
+        setAddress("Address not found");
+      }
+    });
+  };
+
+  // ✅ FIX 1: Fetch address on user location load
+  useEffect(() => {
+    if (!navigator.geolocation) return;
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const userLocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+
+        setMapCenter(userLocation);
+        setMarkerPosition(userLocation);
+        reverseGeocode(userLocation.lat, userLocation.lng); // 🔥 FIX
+      },
+      () => {
+        console.warn("User denied location, using default city");
+      }
+    );
+  }, []);
+
+  const onPlaceChanged = () => {
+    const place = autocompleteRef.current.getPlace();
+    if (!place || !place.geometry) return;
+
+    const location = {
+      lat: place.geometry.location.lat(),
+      lng: place.geometry.location.lng(),
+    };
+
+    setMapCenter(location);
+    setMarkerPosition(location);
+    setAddress(place.formatted_address || "");
+  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -53,19 +111,25 @@ export const ReportIsuue = () => {
     console.log({
       image,
       description,
-      location: locationNotSure ? null : markerPosition,
+      location: locationNotSure
+        ? null
+        : {
+            lat: markerPosition.lat,
+            lng: markerPosition.lng,
+            address,
+          },
     });
 
     toast.success("Issue submitted successfully");
-    if (imagePreview) {
-      URL.revokeObjectURL(imagePreview);
-    }
+
+    if (imagePreview) URL.revokeObjectURL(imagePreview);
 
     setImage(null);
     setImagePreview(null);
     setDescription("");
     setMarkerPosition(null);
     setLocationNotSure(false);
+    setAddress("");
     setSubmitting(false);
   };
 
@@ -80,7 +144,7 @@ export const ReportIsuue = () => {
       </p>
 
       <form className="report-form" onSubmit={handleSubmit}>
-        
+        {/* IMAGE */}
         <div className="form-group">
           <label className="form-label">Upload an image of the issue</label>
           <div className="upload-box">
@@ -96,34 +160,44 @@ export const ReportIsuue = () => {
             ) : (
               <label htmlFor="imageUpload" className="upload-label">
                 <p className="upload-main-text">Browse files to upload</p>
-                <span className="upload-sub-text">
-                  PNG or JPG, max 5MB
-                </span>
+                <span className="upload-sub-text">PNG or JPG, max 5MB</span>
               </label>
             )}
           </div>
         </div>
 
-        
+        {/* DESCRIPTION */}
         <div className="form-group">
           <label className="form-label">Additional details (optional)</label>
           <textarea
             className="description-input"
             rows="4"
-            placeholder="Describe the issue..."
+            placeholder="Describe The Issue"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
         </div>
 
-        
+        {/* LOCATION */}
         <div className="form-group">
           <label className="form-label">Location of the issue</label>
+
+          <Autocomplete
+            onLoad={(auto) => (autocompleteRef.current = auto)}
+            onPlaceChanged={onPlaceChanged}
+          >
+            <input
+              type="text"
+              className="location-search"
+              placeholder="Search location"
+              disabled={locationNotSure}
+            />
+          </Autocomplete>
 
           <div className="map-wrapper">
             <GoogleMap
               mapContainerClassName="map-container"
-              center={markerPosition || defaultCenter}
+              center={mapCenter}
               zoom={14}
               options={{
                 disableDefaultUI: false,
@@ -131,15 +205,19 @@ export const ReportIsuue = () => {
               }}
               onClick={(e) => {
                 if (locationNotSure) return;
-                setMarkerPosition({
+
+                const clickedLocation = {
                   lat: e.latLng.lat(),
                   lng: e.latLng.lng(),
-                });
+                };
+
+                setMarkerPosition(clickedLocation);
+                setMapCenter(clickedLocation);
+                reverseGeocode(clickedLocation.lat, clickedLocation.lng);
               }}
             >
               {markerPosition && <Marker position={markerPosition} />}
             </GoogleMap>
-
 
             {locationNotSure && (
               <div className="map-disabled-overlay">
@@ -148,11 +226,29 @@ export const ReportIsuue = () => {
             )}
           </div>
 
+          {/* ✅ Selected location info */}
+          {!locationNotSure && markerPosition && (
+            <div className="location-coordinates">
+              <strong>Selected Location:</strong>
+              <p>
+                <b>Address:</b>{" "}
+                {address ? address : "Fetching address..."}
+              </p>
+              <p>Latitude: {markerPosition.lat.toFixed(6)}</p>
+              <p>Longitude: {markerPosition.lng.toFixed(6)}</p>
+            </div>
+          )}
+
+          {/* CHECKBOX */}
           <div className="checkbox-group">
             <input
               type="checkbox"
               checked={locationNotSure}
-              onChange={() => setLocationNotSure(!locationNotSure)}
+              onChange={() => {
+                const value = !locationNotSure;
+                setLocationNotSure(value);
+                if (value) setAddress(""); // ✅ FIX 2
+              }}
             />
             <span>I am not sure about the exact location</span>
           </div>
@@ -165,4 +261,3 @@ export const ReportIsuue = () => {
     </div>
   );
 };
-
