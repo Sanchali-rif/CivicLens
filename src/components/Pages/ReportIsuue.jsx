@@ -37,7 +37,7 @@ export const ReportIsuue = () => {
 
   const autocompleteRef = useRef(null);
 
-  // ✅ Reverse geocode helper
+  
   const reverseGeocode = (lat, lng) => {
     if (!window.google) return;
 
@@ -51,7 +51,7 @@ export const ReportIsuue = () => {
     });
   };
 
-  // ✅ FIX 1: Fetch address on user location load
+  
   useEffect(() => {
     if (!navigator.geolocation) return;
 
@@ -144,7 +144,7 @@ export const ReportIsuue = () => {
       </p>
 
       <form className="report-form" onSubmit={handleSubmit}>
-        {/* IMAGE */}
+        
         <div className="form-group">
           <label className="form-label">Upload an image of the issue</label>
           <div className="upload-box">
@@ -166,7 +166,7 @@ export const ReportIsuue = () => {
           </div>
         </div>
 
-        {/* DESCRIPTION */}
+        
         <div className="form-group">
           <label className="form-label">Additional details (optional)</label>
           <textarea
@@ -178,7 +178,7 @@ export const ReportIsuue = () => {
           />
         </div>
 
-        {/* LOCATION */}
+        
         <div className="form-group">
           <label className="form-label">Location of the issue</label>
 
@@ -226,7 +226,7 @@ export const ReportIsuue = () => {
             )}
           </div>
 
-          {/* ✅ Selected location info */}
+          
           {!locationNotSure && markerPosition && (
             <div className="location-coordinates">
               <strong>Selected Location:</strong>
@@ -239,7 +239,7 @@ export const ReportIsuue = () => {
             </div>
           )}
 
-          {/* CHECKBOX */}
+          
           <div className="checkbox-group">
             <input
               type="checkbox"
@@ -247,7 +247,7 @@ export const ReportIsuue = () => {
               onChange={() => {
                 const value = !locationNotSure;
                 setLocationNotSure(value);
-                if (value) setAddress(""); // ✅ FIX 2
+                if (value) setAddress(""); 
               }}
             />
             <span>I am not sure about the exact location</span>
