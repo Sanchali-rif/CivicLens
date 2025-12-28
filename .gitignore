@@ -23,3 +23,26 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+# Backend (PHP)
+# Composer vendor folder (if you ever use it)
+vendor/
+
+# Uploaded images/files
+uploads/
+
+# Service account keys - DO NOT COMMIT
+service_account.json
+backend/service_account.json
+backend/keys/service_account.json
+
+# Ignore any other credential-style files
+*.pem
+*.p12
+*.key
+#database
+civiclens.sql
+*.sql
+.env
+config.local.php
+service-account.json
+uploads/
