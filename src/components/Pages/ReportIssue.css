@@ -137,3 +137,24 @@ body{
   z-index: 10;
   pointer-events: none;
 }
+.location-search {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 0.95rem;
+}
+.location-coordinates {
+  margin-top: 12px;
+  padding: 12px;
+  background: #f1f5f9;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+
+.location-coordinates p {
+  margin: 4px 0;
+}
