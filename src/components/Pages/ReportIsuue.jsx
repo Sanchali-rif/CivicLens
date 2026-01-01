@@ -94,44 +94,62 @@ export const ReportIsuue = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!image) {
-      toast.error("Please upload an image of the issue");
-      return;
+  if (!image) {
+    toast.error("Please upload an image of the issue");
+    return;
+  }
+
+  if (!locationNotSure && !markerPosition) {
+    toast.info("Please select the issue location on the map");
+    return;
+  }
+
+  setSubmitting(true);
+
+  try {
+    const formData = new FormData();
+    formData.append("image", image);
+    formData.append("description", description);
+    formData.append("user_id", 1); // TODO: replace with logged-in user id
+
+    if (!locationNotSure && markerPosition) {
+      formData.append("lat", markerPosition.lat);
+      formData.append("lng", markerPosition.lng);
+      formData.append("address", address);
     }
 
-    if (!locationNotSure && !markerPosition) {
-      toast.info("Please select the issue location on the map");
-      return;
-    }
-
-    setSubmitting(true);
-
-    console.log({
-      image,
-      description,
-      location: locationNotSure
-        ? null
-        : {
-            lat: markerPosition.lat,
-            lng: markerPosition.lng,
-            address,
-          },
+    const res = await fetch("http://localhost/backend/upload_issues.php", {
+      method: "POST",
+      body: formData,
     });
 
-    toast.success("Issue submitted successfully");
+    const data = await res.json();
 
-    if (imagePreview) URL.revokeObjectURL(imagePreview);
+    if (!data.success) {
+      toast.error(data.error || "Upload failed");
+    } else {
+      toast.success("Issue submitted successfully");
+      console.log("SERVER RESPONSE:", data);
+    }
 
-    setImage(null);
-    setImagePreview(null);
-    setDescription("");
-    setMarkerPosition(null);
-    setLocationNotSure(false);
-    setAddress("");
-    setSubmitting(false);
-  };
+  } catch (error) {
+    console.error(error);
+    toast.error("Something went wrong. Try again.");
+  }
+
+  if (imagePreview) URL.revokeObjectURL(imagePreview);
+
+  setImage(null);
+  setImagePreview(null);
+  setDescription("");
+  setMarkerPosition(null);
+  setLocationNotSure(false);
+  setAddress("");
+  setSubmitting(false);
+};
+
 
   if (loadError) return <p>Map failed to load</p>;
   if (!isLoaded) return <p>Loading map…</p>;
