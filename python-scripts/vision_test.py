@@ -1,7 +1,9 @@
 import json
-from design_engine import decide_priority   
-from google.cloud import vision
 import sys
+import os
+from google.cloud import vision
+from decision_engine import decide_priority
+
 
 def get_labels(image_path):
     client = vision.ImageAnnotatorClient()
@@ -9,7 +11,8 @@ def get_labels(image_path):
     with open(image_path, "rb") as img:
         content = img.read()
 
-    response = client.label_detection(image=vision.Image(content=content))
+    image = vision.Image(content=content)
+    response = client.label_detection(image=image)
 
     labels = []
     for label in response.label_annotations:
@@ -19,11 +22,16 @@ def get_labels(image_path):
 
 
 if __name__ == "__main__":
-    image_path = sys.argv[1]
-    labels = get_labels(image_path)
+    if len(sys.argv) < 2:
+        print(json.dumps({"error": "Missing image path"}))
+        sys.exit(1)
 
+    image_path = sys.argv[1]
+
+    labels = get_labels(image_path)
     decision = decide_priority(labels)
-   output = {
+
+    output = {
         **decision,
         "detected_labels": [l[0] for l in labels],
         "ai_metadata": {
@@ -33,4 +41,3 @@ if __name__ == "__main__":
     }
 
     print(json.dumps(output))
-

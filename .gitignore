@@ -47,3 +47,6 @@ config.local.php
 service-account.json
 uploads/
 key/
+service-account/
+__pycache__/
+*.pyc
