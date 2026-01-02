@@ -4,11 +4,9 @@ def decide_priority(detected_labels):
     """
 
    
-    labels = {name.lower(): score for name, score in detected_labels}
-    label_names = set(labels.keys())
-    max_confidence = round(max(labels.values()), 2) if labels else 0.0
-
-   
+   label_scores = {name.lower(): score for name, score in detected_labels}
+   label_names = set(label_scores.keys())
+   max_confidence = round(max(label_scores.values()), 2) if label_scores else 0.0
 
    
     NIGHT_CONTEXT = {
@@ -116,20 +114,18 @@ def decide_priority(detected_labels):
    
     return _reject("No actionable public infrastructure issue detected", label_names)
 
-
-
-def _accept(issue_type, priority, reason, labels, confidence):
+def _accept(issue_type, priority, reason, detected_labels, confidence):
     return {
         "status": "ACCEPTED",
         "issue_type": issue_type,
         "priority": priority,
         "confidence": confidence,
         "reason": reason,
-        "labels": list(labels)
+        "detected_labels": sorted(list(detected_labels))
     }
 
 
-def _reject(reason, labels):
+def _reject(reason, detected_labels):
   
     return {
         "status": "REJECTED",
@@ -137,5 +133,5 @@ def _reject(reason, labels):
         "priority": None,
         "confidence": 0.0,
         "reason": reason,
-        "labels": list(labels)
+        "detected_labels": list(detected_labels)
     }
