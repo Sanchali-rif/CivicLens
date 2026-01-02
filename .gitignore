@@ -46,3 +46,4 @@ civiclens.sql
 config.local.php
 service-account.json
 uploads/
+key/
