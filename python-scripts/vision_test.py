@@ -1,6 +1,7 @@
 import json
 import sys
 import os
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"C:\xampp\htdocs\CivicLens\backend\key\service-account.json"
 from google.cloud import vision
 from decision_engine import decide_priority
 
