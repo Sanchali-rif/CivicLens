@@ -8,6 +8,9 @@ import {
   Autocomplete,
 } from "@react-google-maps/api";
 
+// ✅ Render backend base URL
+const BACKEND_URL = "https://civiclens-backend-exjz.onrender.com";
+
 const defaultCenter = {
   lat: 22.5726,
   lng: 88.3639,
@@ -111,9 +114,8 @@ export const ReportIsuue = () => {
         formData.append("address", address);
       }
 
-      // ✅ ONLY FIX: correct backend URL
       const res = await fetch(
-        "http://localhost/CivicLens/backend/upload_issue.php",
+        `${BACKEND_URL}/upload_issue.php`,
         {
           method: "POST",
           body: formData,

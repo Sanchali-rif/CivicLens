@@ -1,13 +1,11 @@
 <?php
 
-// ================================
-// CORS HEADERS (MUST BE FIRST)
-// ================================
+
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 
-// Handle preflight (IMPORTANT)
+
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
@@ -18,26 +16,20 @@ header('Content-Type: application/json');
 require_once 'config.php';
 require_once 'db.php';
 
-/* -----------------------------
-   Allow POST only
---------------------------------*/
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['error' => 'POST only']);
     exit;
 }
 
-/* -----------------------------
-   Validate image upload
---------------------------------*/
+
 if (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
     echo json_encode(['error' => 'No image uploaded']);
     exit;
 }
 
-/* -----------------------------
-   Save uploaded image
---------------------------------*/
+
 $filename = time() . '_' . basename($_FILES['image']['name']);
 $target   = UPLOAD_DIR . $filename;
 
@@ -46,9 +38,7 @@ if (!move_uploaded_file($_FILES['image']['tmp_name'], $target)) {
     exit;
 }
 
-/* -----------------------------
-   Collect form data
---------------------------------*/
+
 $description = $_POST['description'] ?? null;
 $user_id     = $_POST['user_id'] ?? null;
 
@@ -56,14 +46,12 @@ $latitude  = !empty($_POST['lat']) ? floatval($_POST['lat']) : null;
 $longitude = !empty($_POST['lng']) ? floatval($_POST['lng']) : null;
 $address   = $_POST['address'] ?? null;
 
-/* -----------------------------
-   Run Python Vision Script
---------------------------------*/
+
 $python = escapeshellarg(PYTHON_BIN);
 $script = escapeshellarg(VISION_SCRIPT);
 $image  = escapeshellarg($target);
 
-// Capture stderr too
+
 $cmd = "$python $script $image 2>&1";
 $output = shell_exec($cmd);
 
@@ -76,9 +64,7 @@ if ($output === null || trim($output) === '') {
     exit;
 }
 
-/* -----------------------------
-   Decode Python JSON output
---------------------------------*/
+
 $result = json_decode($output, true);
 
 if (json_last_error() !== JSON_ERROR_NONE || !is_array($result)) {
@@ -90,9 +76,7 @@ if (json_last_error() !== JSON_ERROR_NONE || !is_array($result)) {
     exit;
 }
 
-/* -----------------------------
-   Insert into database
---------------------------------*/
+
 try {
     $stmt = $pdo->prepare("
         INSERT INTO issues (

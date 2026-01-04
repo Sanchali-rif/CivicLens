@@ -1,18 +1,21 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./DashBoard.css";
 
+
+const BACKEND_URL = "https://civiclens-backend-exjz.onrender.com";
+
 export const DashBoard = () => {
   const [issues, setIssues] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Prevent double fetch in React 18 StrictMode
+  
   const hasFetched = useRef(false);
 
   useEffect(() => {
     if (hasFetched.current) return;
     hasFetched.current = true;
 
-    fetch("http://localhost/CivicLens/backend/get_user_issues.php?user_id=1")
+    fetch(`${BACKEND_URL}/get_user_issues.php?user_id=1`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
@@ -47,7 +50,7 @@ export const DashBoard = () => {
             return (
               <div key={issue.id} className="issue-card">
                 <img
-                  src={`http://localhost/CivicLens/backend/uploads/${issue.image_file}`}
+                  src={`${BACKEND_URL}/uploads/${issue.image_file}`}
                   alt="Reported issue"
                   className="issue-image"
                 />
@@ -81,4 +84,3 @@ export const DashBoard = () => {
     </div>
   );
 };
-
