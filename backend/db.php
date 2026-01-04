@@ -1,12 +1,28 @@
 <?php
 require_once 'config.php';
-try
-{
-    $pdo= new PDO("mysql:host=localhost;dbname=civiclens;charset=utf8","root","");
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-}
-catch(Exception $e)
-{
+
+try {
+    $databaseUrl = getenv('DATABASE_URL');
+
+    if (!$databaseUrl) {
+        throw new Exception("DATABASE_URL not set");
+    }
+
+    $dbopts = parse_url($databaseUrl);
+
+    $host = $dbopts["host"];
+    $port = $dbopts["port"];
+    $user = $dbopts["user"];
+    $pass = $dbopts["pass"];
+    $dbname = ltrim($dbopts["path"], '/');
+
+    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
+
+    $pdo = new PDO($dsn, $user, $pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    ]);
+
+} catch (Exception $e) {
+    http_response_code(500);
     die("DB connection failed");
 }
-?>
