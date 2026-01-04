@@ -7,7 +7,7 @@
 
 .admin-title {
   font-size: 28px;
-  margin-bottom: 25px;
+  margin-bottom: 22px;
   color: #222;
 }
 
@@ -16,33 +16,37 @@
   color: #555;
 }
 
-/* Grid */
+
 .admin-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  grid-template-columns: repeat(auto-fill, 360px);
   gap: 22px;
+  justify-content: center;
 }
 
-/* Card */
+
 .admin-card {
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 10px;
   overflow: hidden;
-  transition: box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .admin-card:hover {
+  transform: translateY(-4px);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 
+
 .admin-image {
   width: 100%;
-  height: 220px;
+  aspect-ratio: 16 / 9;
   object-fit: cover;
+  max-height: 220px;
 }
 
-/* Content */
+
 .admin-content {
   padding: 16px;
 }
@@ -52,7 +56,7 @@
   color: #333;
 }
 
-/* Priority */
+
 .priority {
   font-weight: bold;
   margin-bottom: 6px;
@@ -70,9 +74,11 @@
   color: #388e3c;
 }
 
+
 .status-text {
   font-weight: bold;
 }
+
 
 .admin-reason,
 .admin-address,
@@ -82,7 +88,7 @@
   margin-top: 6px;
 }
 
-/* Status dropdown */
+
 .status-select {
   margin-top: 10px;
   padding: 6px 10px;
@@ -90,3 +96,70 @@
   border: 1px solid #ccc;
   font-size: 14px;
 }
+
+
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.stat-card p {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.stat-card.active {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.19);
+}
+
+
+.stat-card.total {
+  border-left: 4px solid #6366f1;
+}
+
+.stat-card.open {
+  border-left: 4px solid #22c55e;
+}
+
+.stat-card.progress {
+  border-left: 4px solid #3b82f6;
+}
+
+.stat-card.resolved {
+  border-left: 4px solid #9ca3af;
+}
+
+
+.stat-card.high {
+  border-left: 4px solid #d32f2f;
+}
+
+.stat-card.medium {
+  border-left: 4px solid #f57c00;
+}
+
+.stat-card.low {
+  border-left: 4px solid #388e3c;
+}
+

@@ -4,8 +4,14 @@ import "./Admin.css";
 export const Admin = () => {
   const [issues, setIssues] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [activeFilter, setActiveFilter] = useState("ALL");
+
+  
+  const [priorityFilter, setPriorityFilter] = useState("ALL");
+
   const hasFetched = useRef(false);
 
+  
   const fetchIssues = async () => {
     try {
       const res = await fetch(
@@ -29,15 +35,14 @@ export const Admin = () => {
     fetchIssues();
   }, []);
 
+  
   const updateStatus = async (issueId, newStatus) => {
     try {
       await fetch(
         "http://localhost/CivicLens/backend/update_issue_status.php",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             issue_id: issueId,
             status: newStatus,
@@ -51,6 +56,44 @@ export const Admin = () => {
     }
   };
 
+  
+  const total = issues.length;
+  const open = issues.filter((i) => i.status === "OPEN").length;
+  const inProgress = issues.filter(
+    (i) => i.status === "IN_PROGRESS"
+  ).length;
+  const resolved = issues.filter((i) => i.status === "RESOLVED").length;
+
+  const highRisk = issues.filter((i) => i.priority === "HIGH").length;
+  const mediumRisk = issues.filter((i) => i.priority === "MEDIUM").length;
+  const lowRisk = issues.filter((i) => i.priority === "LOW").length;
+
+  
+  const priorityOrder = {
+    HIGH: 3,
+    MEDIUM: 2,
+    LOW: 1,
+  };
+
+  const sortedIssues = [...issues].sort((a, b) => {
+    const priorityDiff =
+      priorityOrder[b.priority] - priorityOrder[a.priority];
+    if (priorityDiff !== 0) return priorityDiff;
+    return b.confidence - a.confidence;
+  });
+
+  
+  const filteredIssues = sortedIssues.filter((issue) => {
+  const statusMatch =
+    activeFilter === "ALL" || issue.status === activeFilter;
+
+  const priorityMatch =
+    priorityFilter === "ALL" || issue.priority === priorityFilter;
+
+  return statusMatch && priorityMatch;
+});
+
+
   if (loading) {
     return <p className="admin-loading">Loading all issues...</p>;
   }
@@ -59,8 +102,108 @@ export const Admin = () => {
     <div className="admin-container">
       <h1 className="admin-title">Admin Dashboard</h1>
 
+      
+      <div className="admin-stats">
+        <div
+          className={`stat-card total ${
+            activeFilter === "ALL" && priorityFilter === "ALL"
+              ? "active"
+              : ""
+          }`}
+          onClick={() => {
+            setActiveFilter("ALL");
+            setPriorityFilter("ALL");
+          }}
+        >
+          <h3>Total Issues</h3>
+          <p>{total}</p>
+        </div>
+
+        <div
+          className={`stat-card open ${
+            activeFilter === "OPEN" ? "active" : ""
+          }`}
+          onClick={() => {
+            setActiveFilter("OPEN");
+            setPriorityFilter("ALL");
+          }}
+        >
+          <h3>Open</h3>
+          <p>{open}</p>
+        </div>
+
+        <div
+          className={`stat-card progress ${
+            activeFilter === "IN_PROGRESS" ? "active" : ""
+          }`}
+          onClick={() => {
+            setActiveFilter("IN_PROGRESS");
+            setPriorityFilter("ALL");
+          }}
+        >
+          <h3>In Progress</h3>
+          <p>{inProgress}</p>
+        </div>
+
+        <div
+          className={`stat-card resolved ${
+            activeFilter === "RESOLVED" ? "active" : ""
+          }`}
+          onClick={() => {
+            setActiveFilter("RESOLVED");
+            setPriorityFilter("ALL");
+          }}
+        >
+          <h3>Resolved</h3>
+          <p>{resolved}</p>
+        </div>
+      </div>
+
+      
+      <div className="admin-stats">
+        <div
+          className={`stat-card high ${
+            priorityFilter === "HIGH" ? "active" : ""
+          }`}
+          onClick={() => {
+            setPriorityFilter("HIGH");
+            setActiveFilter("ALL");
+          }}
+        >
+          <h3>High Risk</h3>
+          <p>{highRisk}</p>
+        </div>
+
+        <div
+          className={`stat-card medium ${
+            priorityFilter === "MEDIUM" ? "active" : ""
+          }`}
+          onClick={() => {
+            setPriorityFilter("MEDIUM");
+            setActiveFilter("ALL");
+          }}
+        >
+          <h3>Medium Risk</h3>
+          <p>{mediumRisk}</p>
+        </div>
+
+        <div
+          className={`stat-card low ${
+            priorityFilter === "LOW" ? "active" : ""
+          }`}
+          onClick={() => {
+            setPriorityFilter("LOW");
+            setActiveFilter("ALL");
+          }}
+        >
+          <h3>Low Risk</h3>
+          <p>{lowRisk}</p>
+        </div>
+      </div>
+
+      
       <div className="admin-grid">
-        {issues.map((issue) => (
+        {filteredIssues.map((issue) => (
           <div key={issue.id} className="admin-card">
             <img
               src={`http://localhost/CivicLens/backend/uploads/${issue.image_file}`}
@@ -77,9 +220,7 @@ export const Admin = () => {
 
               <p>
                 <strong>Status:</strong>{" "}
-                <span className="status-text">
-                  {issue.status || "OPEN"}
-                </span>
+                <span className="status-text">{issue.status}</span>
               </p>
 
               <p>
@@ -98,10 +239,9 @@ export const Admin = () => {
                 {new Date(issue.created_at).toLocaleString()}
               </p>
 
-             
               <select
                 className="status-select"
-                value={issue.status || "OPEN"}
+                value={issue.status}
                 onChange={(e) =>
                   updateStatus(issue.id, e.target.value)
                 }

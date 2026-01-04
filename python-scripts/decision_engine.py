@@ -3,12 +3,12 @@ def decide_priority(detected_labels):
     detected_labels: list of tuples -> [(label_name, confidence), ...]
     """
 
-    # ---------------- NORMALIZE INPUT ----------------
+    
     label_scores = {name.lower(): score for name, score in detected_labels}
     label_names = set(label_scores.keys())
     max_confidence = round(max(label_scores.values()), 2) if label_scores else 0.0
 
-    # ---------------- CONTEXT DEFINITIONS ----------------
+    
 
     NIGHT_CONTEXT = {
         "night", "darkness", "midnight", "low light",
@@ -123,14 +123,14 @@ def decide_priority(detected_labels):
             max_confidence
         )
 
-    # ---------------- FINAL FALLBACK ----------------
+    
     return _reject(
         "No actionable public infrastructure issue detected",
         label_names
     )
 
 
-# ---------------- HELPER FUNCTIONS ----------------
+
 
 def _accept(issue_type, priority, reason, detected_labels, confidence):
     return {
