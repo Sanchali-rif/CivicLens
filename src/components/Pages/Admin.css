@@ -1,0 +1,92 @@
+.admin-container {
+  padding: 30px;
+  max-width: 1300px;
+  margin: auto;
+  font-family: Arial, sans-serif;
+}
+
+.admin-title {
+  font-size: 28px;
+  margin-bottom: 25px;
+  color: #222;
+}
+
+.admin-loading {
+  font-size: 18px;
+  color: #555;
+}
+
+/* Grid */
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 22px;
+}
+
+/* Card */
+.admin-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+}
+
+.admin-card:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.admin-image {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+/* Content */
+.admin-content {
+  padding: 16px;
+}
+
+.admin-content h3 {
+  margin-bottom: 8px;
+  color: #333;
+}
+
+/* Priority */
+.priority {
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.priority.high {
+  color: #d32f2f;
+}
+
+.priority.medium {
+  color: #f57c00;
+}
+
+.priority.low {
+  color: #388e3c;
+}
+
+.status-text {
+  font-weight: bold;
+}
+
+.admin-reason,
+.admin-address,
+.admin-date {
+  font-size: 14px;
+  color: #555;
+  margin-top: 6px;
+}
+
+/* Status dropdown */
+.status-select {
+  margin-top: 10px;
+  padding: 6px 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}

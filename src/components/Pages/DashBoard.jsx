@@ -1,11 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./DashBoard.css";
 
 export const DashBoard = () => {
   const [issues, setIssues] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // Prevent double fetch in React 18 StrictMode
+  const hasFetched = useRef(false);
+
   useEffect(() => {
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+
     fetch("http://localhost/CivicLens/backend/get_user_issues.php?user_id=1")
       .then((res) => res.json())
       .then((data) => {
@@ -36,7 +42,7 @@ export const DashBoard = () => {
             const priorityClass = `badge priority-${issue.priority.toLowerCase()}`;
             const statusClass = `badge status-${issue.status
               .toLowerCase()
-              .replace(" ", "-")}`;
+              .replace("_", "-")}`;
 
             return (
               <div key={issue.id} className="issue-card">
@@ -54,14 +60,16 @@ export const DashBoard = () => {
                       {issue.priority}
                     </span>
                     <span className={statusClass}>
-                      {issue.status}
+                      {issue.status.replace("_", " ")}
                     </span>
                   </div>
 
                   <div className="issue-meta">
-                    <span>📍 {issue.address || "Location not provided"}</span>
                     <span>
-                      🕒 {new Date(issue.created_at).toLocaleString()}
+                      📍 {issue.address || "Location not provided"}
+                    </span>
+                    <span>
+                      {new Date(issue.created_at).toLocaleString()}
                     </span>
                   </div>
                 </div>

@@ -1,10 +1,8 @@
-
 body {
   background-color: #f5f7fb;
   font-family: "Inter", system-ui, -apple-system, sans-serif;
   color: #1f2937;
 }
-
 
 .dashboard-container {
   max-width: 1200px;
@@ -18,13 +16,11 @@ body {
   margin-bottom: 30px;
 }
 
-
 .issues-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 24px;
 }
-
 
 .issue-card {
   background: #ffffff;
@@ -44,16 +40,11 @@ body {
   transition: transform 0.3s ease;
 }
 
-
 .issue-image {
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
-  border-top-left-radius: 14px;
-  border-top-right-radius: 14px;
 }
-
-
 
 .issue-content {
   padding: 18px 20px;
@@ -65,7 +56,6 @@ body {
   margin-bottom: 10px;
 }
 
-
 .badge {
   display: inline-block;
   padding: 5px 12px;
@@ -75,6 +65,7 @@ body {
   margin-right: 8px;
 }
 
+/* Priority */
 .priority-high {
   background: #fee2e2;
   color: #b91c1c;
@@ -90,22 +81,24 @@ body {
   color: #166534;
 }
 
-
+/* Status */
 .status-open {
   border: 1px solid #22c55e;
   color: #22c55e;
+  background-color: #ecfdf5;
 }
 
-.status-progress {
+.status-in-progress {
   border: 1px solid #3b82f6;
   color: #3b82f6;
+  background-color: #eff6ff;
 }
 
 .status-resolved {
   border: 1px solid #9ca3af;
   color: #6b7280;
+  background-color: #f3f4f6;
 }
-
 
 .issue-meta {
   font-size: 14px;
