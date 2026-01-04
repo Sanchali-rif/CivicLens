@@ -1,6 +1,4 @@
 <?php
-require_once 'config.php';
-
 try {
     $databaseUrl = getenv('DATABASE_URL');
 
@@ -11,18 +9,23 @@ try {
     $dbopts = parse_url($databaseUrl);
 
     $host = $dbopts["host"];
-    $port = $dbopts["port"];
+    $port = $dbopts["port"] ?? 5432;
     $user = $dbopts["user"];
     $pass = $dbopts["pass"];
-    $dbname = ltrim($dbopts["path"], '/');
+    $dbname = ltrim($dbopts["path"], "/");
 
-    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
+    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=require";
 
     $pdo = new PDO($dsn, $user, $pass, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]);
-
-} catch (Exception $e) {
+} catch (Throwable $e) {
     http_response_code(500);
-    die("DB connection failed");
+    echo json_encode([
+        "success" => false,
+        "error" => "DB connection failed",
+        "details" => $e->getMessage()
+    ]);
+    exit;
 }
