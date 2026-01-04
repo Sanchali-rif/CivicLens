@@ -15,11 +15,6 @@ const defaultCenter = {
 
 const libraries = ["places"];
 
-const mapContainerStyle = {
-  width: "100%",
-  height: "500px",
-};
-
 export const ReportIsuue = () => {
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
@@ -37,7 +32,6 @@ export const ReportIsuue = () => {
 
   const autocompleteRef = useRef(null);
 
-  
   const reverseGeocode = (lat, lng) => {
     if (!window.google) return;
 
@@ -45,13 +39,10 @@ export const ReportIsuue = () => {
     geocoder.geocode({ location: { lat, lng } }, (results, status) => {
       if (status === "OK" && results[0]) {
         setAddress(results[0].formatted_address);
-      } else {
-        setAddress("Address not found");
       }
     });
   };
 
-  
   useEffect(() => {
     if (!navigator.geolocation) return;
 
@@ -64,7 +55,7 @@ export const ReportIsuue = () => {
 
         setMapCenter(userLocation);
         setMarkerPosition(userLocation);
-        reverseGeocode(userLocation.lat, userLocation.lng); // 🔥 FIX
+        reverseGeocode(userLocation.lat, userLocation.lng);
       },
       () => {
         console.warn("User denied location, using default city");
@@ -94,62 +85,64 @@ export const ReportIsuue = () => {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!image) {
-    toast.error("Please upload an image of the issue");
-    return;
-  }
-
-  if (!locationNotSure && !markerPosition) {
-    toast.info("Please select the issue location on the map");
-    return;
-  }
-
-  setSubmitting(true);
-
-  try {
-    const formData = new FormData();
-    formData.append("image", image);
-    formData.append("description", description);
-    formData.append("user_id", 1); // TODO: replace with logged-in user id
-
-    if (!locationNotSure && markerPosition) {
-      formData.append("lat", markerPosition.lat);
-      formData.append("lng", markerPosition.lng);
-      formData.append("address", address);
+    if (!image) {
+      toast.error("Please upload an image of the issue");
+      return;
     }
 
-    const res = await fetch("http://localhost/backend/upload_issues.php", {
-      method: "POST",
-      body: formData,
-    });
-
-    const data = await res.json();
-
-    if (!data.success) {
-      toast.error(data.error || "Upload failed");
-    } else {
-      toast.success("Issue submitted successfully");
-      console.log("SERVER RESPONSE:", data);
+    if (!locationNotSure && !markerPosition) {
+      toast.info("Please select the issue location on the map");
+      return;
     }
 
-  } catch (error) {
-    console.error(error);
-    toast.error("Something went wrong. Try again.");
-  }
+    setSubmitting(true);
 
-  if (imagePreview) URL.revokeObjectURL(imagePreview);
+    try {
+      const formData = new FormData();
+      formData.append("image", image);
+      formData.append("description", description);
+      formData.append("user_id", 1);
 
-  setImage(null);
-  setImagePreview(null);
-  setDescription("");
-  setMarkerPosition(null);
-  setLocationNotSure(false);
-  setAddress("");
-  setSubmitting(false);
-};
+      if (!locationNotSure && markerPosition) {
+        formData.append("lat", markerPosition.lat);
+        formData.append("lng", markerPosition.lng);
+        formData.append("address", address);
+      }
 
+      // ✅ ONLY FIX: correct backend URL
+      const res = await fetch(
+        "http://localhost/CivicLens/backend/upload_issue.php",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await res.json();
+
+      if (!data.success) {
+        toast.error(data.error || "Upload failed");
+      } else {
+        toast.success("Issue submitted successfully");
+        console.log("SERVER RESPONSE:", data);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong. Try again.");
+    }
+
+    if (imagePreview) URL.revokeObjectURL(imagePreview);
+
+    setImage(null);
+    setImagePreview(null);
+    setDescription("");
+    setMarkerPosition(null);
+    setLocationNotSure(false);
+    setAddress("");
+    setSubmitting(false);
+  };
 
   if (loadError) return <p>Map failed to load</p>;
   if (!isLoaded) return <p>Loading map…</p>;
@@ -162,7 +155,6 @@ export const ReportIsuue = () => {
       </p>
 
       <form className="report-form" onSubmit={handleSubmit}>
-        
         <div className="form-group">
           <label className="form-label">Upload an image of the issue</label>
           <div className="upload-box">
@@ -184,7 +176,6 @@ export const ReportIsuue = () => {
           </div>
         </div>
 
-        
         <div className="form-group">
           <label className="form-label">Additional details (optional)</label>
           <textarea
@@ -196,7 +187,6 @@ export const ReportIsuue = () => {
           />
         </div>
 
-        
         <div className="form-group">
           <label className="form-label">Location of the issue</label>
 
@@ -244,7 +234,6 @@ export const ReportIsuue = () => {
             )}
           </div>
 
-          
           {!locationNotSure && markerPosition && (
             <div className="location-coordinates">
               <strong>Selected Location:</strong>
@@ -257,7 +246,6 @@ export const ReportIsuue = () => {
             </div>
           )}
 
-          
           <div className="checkbox-group">
             <input
               type="checkbox"
@@ -265,7 +253,7 @@ export const ReportIsuue = () => {
               onChange={() => {
                 const value = !locationNotSure;
                 setLocationNotSure(value);
-                if (value) setAddress(""); 
+                if (value) setAddress("");
               }}
             />
             <span>I am not sure about the exact location</span>

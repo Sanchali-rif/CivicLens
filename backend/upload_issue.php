@@ -1,5 +1,18 @@
 <?php
 
+// ================================
+// CORS HEADERS (MUST BE FIRST)
+// ================================
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
+
+// Handle preflight (IMPORTANT)
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
 header('Content-Type: application/json');
 
 require_once 'config.php';
@@ -50,10 +63,9 @@ $python = escapeshellarg(PYTHON_BIN);
 $script = escapeshellarg(VISION_SCRIPT);
 $image  = escapeshellarg($target);
 
-/* Capture stderr also */
+// Capture stderr too
 $cmd = "$python $script $image 2>&1";
 $output = shell_exec($cmd);
-
 
 if ($output === null || trim($output) === '') {
     echo json_encode([
@@ -64,7 +76,9 @@ if ($output === null || trim($output) === '') {
     exit;
 }
 
-
+/* -----------------------------
+   Decode Python JSON output
+--------------------------------*/
 $result = json_decode($output, true);
 
 if (json_last_error() !== JSON_ERROR_NONE || !is_array($result)) {
@@ -76,7 +90,9 @@ if (json_last_error() !== JSON_ERROR_NONE || !is_array($result)) {
     exit;
 }
 
-
+/* -----------------------------
+   Insert into database
+--------------------------------*/
 try {
     $stmt = $pdo->prepare("
         INSERT INTO issues (
@@ -111,19 +127,19 @@ try {
     ");
 
     $stmt->execute([
-        ':user_id'          => $user_id,
-        ':image_file'       => $filename,
-        ':description'      => $description,
-        ':issue_type'       => $result['issue_type'] ?? null,
-        ':priority'         => $result['priority'] ?? 'LOW',
-        ':confidence'       => $result['confidence'] ?? null,
-        ':reason'           => $result['reason'] ?? null,
-        ':ai_model'         => $result['ai_metadata']['model'] ?? 'Google Vision API',
-        ':decision_engine'  => $result['ai_metadata']['decision_engine'] ?? 'CivicLens Unified Logic v1.0',
-        ':vision_raw_json'  => json_encode($result, JSON_UNESCAPED_UNICODE),
-        ':lat'              => $latitude,
-        ':lng'              => $longitude,
-        ':address'          => $address
+        ':user_id'         => $user_id,
+        ':image_file'      => $filename,
+        ':description'     => $description,
+        ':issue_type'      => $result['issue_type'] ?? null,
+        ':priority'        => $result['priority'] ?? 'LOW',
+        ':confidence'      => $result['confidence'] ?? null,
+        ':reason'          => $result['reason'] ?? null,
+        ':ai_model'        => $result['ai_metadata']['model'] ?? 'Google Vision API',
+        ':decision_engine' => $result['ai_metadata']['decision_engine'] ?? 'CivicLens Unified Logic v1.0',
+        ':vision_raw_json' => json_encode($result, JSON_UNESCAPED_UNICODE),
+        ':lat'             => $latitude,
+        ':lng'             => $longitude,
+        ':address'         => $address
     ]);
 
     echo json_encode([
