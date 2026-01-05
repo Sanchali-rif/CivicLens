@@ -11,11 +11,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 define('UPLOAD_DIR', __DIR__ . '/uploads/');
 
-define('PYTHON_BIN', 'python3');
+define(
+    'PYTHON_BIN',
+    'python3'
+);
 
 define(
     'VISION_SCRIPT',
-    __DIR__ . '/python-scripts/vision_test.py'
+    '/var/www/python-scripts/vision_test.py'
 );
 
 define(
