@@ -25,9 +25,7 @@ if (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
     exit;
 }
 
-/**
- * ✅ USE UPLOAD_DIR FROM config.php
- */
+
 $uploadDir = rtrim(UPLOAD_DIR, '/') . '/';
 
 if (!is_dir($uploadDir)) {
@@ -55,7 +53,7 @@ $address   = $_POST['address'] ?? null;
 
 $python = escapeshellarg(PYTHON_BIN);
 $script = escapeshellarg(VISION_SCRIPT);
-$image  = escapeshellarg($target);
+$image = escapeshellarg(realpath($target));
 
 $cmd = "$python $script $image 2>&1";
 $output = shell_exec($cmd);

@@ -13,7 +13,10 @@ define('UPLOAD_DIR', __DIR__ . '/uploads/');
 
 define('PYTHON_BIN', 'python3');
 
-define('VISION_SCRIPT', '/var/www/python-scripts/vision_test.py');
+define(
+    'VISION_SCRIPT',
+    __DIR__ . '/python-scripts/vision_test.py'
+);
 
 define(
     'GOOGLE_CREDENTIALS',
