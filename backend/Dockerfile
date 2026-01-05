@@ -6,6 +6,8 @@ RUN apt-get update && apt-get install -y \
 
 RUN a2enmod rewrite
 
+COPY backend/ /var/www/html/
+
 
 RUN mkdir -p /var/www/html/uploads \
     && chown -R www-data:www-data /var/www/html \

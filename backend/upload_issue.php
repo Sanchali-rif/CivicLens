@@ -25,9 +25,10 @@ if (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) {
     exit;
 }
 
-
-$uploadDir = __DIR__ . '/uploads/';
-
+/**
+ * ✅ USE UPLOAD_DIR FROM config.php
+ */
+$uploadDir = rtrim(UPLOAD_DIR, '/') . '/';
 
 if (!is_dir($uploadDir)) {
     mkdir($uploadDir, 0755, true);

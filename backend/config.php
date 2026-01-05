@@ -29,4 +29,3 @@ define(
     'GOOGLE_CREDENTIALS',
     __DIR__ . '/key/service-account.json'
 );
-
