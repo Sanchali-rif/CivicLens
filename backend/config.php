@@ -11,20 +11,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 define('UPLOAD_DIR', __DIR__ . '/uploads/');
 
-/**
- * IMPORTANT:
- * - Windows uses python.exe
- * - Render/Docker (Linux) uses python3
- */
-define(
-    'PYTHON_BIN',
-    PHP_OS_FAMILY === 'Windows' ? 'C:\\Users\\sahas\\AppData\\Local\\Programs\\Python\\Python312\\python.exe' : 'python3'
-);
+define('PYTHON_BIN', 'python3');
 
-define(
-    'VISION_SCRIPT',
-    dirname(__DIR__) . '/python-scripts/vision_test.py'
-);
+define('VISION_SCRIPT', '/var/www/python-scripts/vision_test.py');
 
 define(
     'GOOGLE_CREDENTIALS',
