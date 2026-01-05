@@ -10,8 +10,10 @@ RUN apt-get update && apt-get install -y \
 
 RUN a2enmod rewrite
 
-
 COPY . /var/www/html/
+
+
+COPY ../python-scripts /var/www/html/python-scripts
 
 
 RUN mkdir -p /var/www/html/uploads \
