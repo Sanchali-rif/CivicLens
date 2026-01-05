@@ -1,0 +1,13 @@
+node_modules
+npm-debug.log
+.git
+.gitignore
+README.md
+vite.config.js
+eslint.config.js
+src/
+public/
+civiclens.sql
+.env
+uploads/*
+key/service-account.json
