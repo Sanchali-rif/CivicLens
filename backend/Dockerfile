@@ -13,9 +13,6 @@ RUN a2enmod rewrite
 # Copy backend files (use the Docker build context from this folder)
 COPY . /var/www/html/
 
-# Copy Python scripts from parent directory
-COPY ../python-scripts /var/www/python-scripts/
-
 # Create uploads directory and fix permissions
 RUN mkdir -p /var/www/html/uploads \
     && chown -R www-data:www-data /var/www/html \
