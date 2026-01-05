@@ -10,8 +10,8 @@ RUN apt-get update && apt-get install -y \
 # Enable Apache rewrite
 RUN a2enmod rewrite
 
-# Copy backend files
-COPY backend/ /var/www/html/
+# Copy backend files (use the Docker build context from this folder)
+COPY . /var/www/html/
 
 # Create uploads directory and fix permissions
 RUN mkdir -p /var/www/html/uploads \
