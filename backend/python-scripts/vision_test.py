@@ -1,7 +1,3 @@
-import os
-print("CREDENTIAL PATH:", os.environ.get("GOOGLE_APPLICATION_CREDENTIALS"))
-print("FILE EXISTS:", os.path.exists(os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")))
-
 import json
 import sys
 from google.cloud import vision
