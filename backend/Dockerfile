@@ -19,13 +19,10 @@ RUN pip3 install --no-cache-dir google-cloud-vision
 # Enable Apache rewrite
 RUN a2enmod rewrite
 
-# Copy backend files
-COPY backend/ /var/www/html/
+# Copy backend files (CORRECT)
+COPY . /var/www/html/
 
-# Ensure python scripts path exists
-RUN ls -la /var/www/html/python-scripts
-
-# Create uploads directory
+# Create uploads directory + permissions
 RUN mkdir -p /var/www/html/uploads \
     && chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html
