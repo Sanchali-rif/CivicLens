@@ -1,25 +1,20 @@
 FROM php:8.2-apache
 
-# Install system deps
+# Install system deps + Python + Postgres PDO
 RUN apt-get update && apt-get install -y \
     libpq-dev \
     python3 \
     python3-pip \
     && docker-php-ext-install pdo pdo_pgsql
-
-# Install Python deps 
-RUN pip3 install --no-cache-dir google-cloud-vision
+    RUN pip3 install google-cloud-vision
 
 # Enable Apache rewrite
 RUN a2enmod rewrite
 
-# Copy backend PHP files
-COPY backend/ /var/www/html/
+# Copy ALL backend files (we are already in backend context)
+COPY . /var/www/html/
 
-# Copy python scripts
-COPY python-scripts/ /var/www/html/python-scripts/
-
-# Create uploads directory
+# Create uploads dir + permissions
 RUN mkdir -p /var/www/html/uploads \
     && chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html
