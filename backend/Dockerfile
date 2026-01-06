@@ -13,13 +13,19 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     && docker-php-ext-install pdo pdo_pgsql
 
-# Install Google Vision SDK
-RUN pip3 install --no-cache-dir google-cloud-vision
+# Create Python virtual environment
+RUN python3 -m venv /opt/venv
+
+# Install Google Vision SDK in venv
+RUN /opt/venv/bin/pip install --no-cache-dir google-cloud-vision
+
+# Use venv python globally
+ENV PATH="/opt/venv/bin:$PATH"
 
 # Enable Apache rewrite
 RUN a2enmod rewrite
 
-# Copy backend files (CORRECT)
+# Copy backend files
 COPY . /var/www/html/
 
 # Create uploads directory + permissions
