@@ -10,4 +10,3 @@ public/
 civiclens.sql
 .env
 uploads/*
-key/service-account.json
