@@ -32,3 +32,7 @@ COPY . /var/www/html/
 RUN mkdir -p /var/www/html/uploads \
     && chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html
+    
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
