@@ -9,9 +9,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
+/**
+ * Upload directory (inside container)
+ */
 define('UPLOAD_DIR', __DIR__ . '/uploads/');
 
-define('PYTHON_BIN', 'python3');
+
+define('PYTHON_BIN', '/usr/bin/python3');
+
 
 define(
     'VISION_SCRIPT',
